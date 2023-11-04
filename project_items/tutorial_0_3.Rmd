@@ -1,0 +1,262 @@
+---
+title: | 
+  ![](https://i.imgur.com/SWWUQpP.png){width=500px style="display: block; margin:0 auto;"}
+  Tutorial 3: Introdução a Banco de Dados
+author: "Victor Lobato dos Santos"
+output:
+  html_document:
+    highlight: haddock
+    includes:
+      in_header: "fever_icon.html"
+    theme: flatly
+    number_sections: yes
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<div class="text-justify">  
+# Banco de dados
+
+Os bancos de dados são utilizados para armazenar dados ou informações estruturadas, que permite o gerenciamento de toda informação ali coletada. Eles podem ser divididos em Banco de dados relacionais e não relacionais. A partir destes bancos de dados, que se realiza a base de uma análise de dados.
+
+É interessante que, seu banco de dados seja salvo em formato *.csv*, mais especificamente, *CSV UTF8 (separado por vírgulas)*, para evitar possíveis conflitos e erros pois, o CSV é um tipo de arquivo que utiliza as informações de colunas diferentes, separando-as por vírgula.
+
+## Como carregar bancos de dados
+
+### Selecionando o diretório de trabalho
+
+Para carregar um banco de dados no RStudio, deve-se seguir alguns passos:\
+Primeiro é preciso estabelecer qual o diretório de trabalho (working dicerctory) da maneira que aprendemos anteriormente e, como já visto antes, o diretório de trabalho é a pasta na qual serão salvos / carregados os arquivos.\
+Para relembrar, vá na opção *Session* no canto superior direito de seu RStudio e selecione a opção *Set Working Directory*. Nesta aba terão duas opções, a primeira (To source File Location) fará com que o R estabeleça como diretório de trabalho, a pasta na qual você está trabalhando, portanto, caso seu **script** esteja na área de trabalho, por exemplo, é lá que será salvo.\
+A segunda opção da aba *Set Working Directory*, nomeada *Choose Directory*, te levará a selecionar o local que queira salvar o diretório, a partir dele, você pode escolher qualquer pasta de seu computador.
+
+Você pode utilizar também a função para selecionar o diretório de trabalho, partir do comando `setwd()`. a partir dela você escreverá entre áspas, no parênteses, o diretório selecionado, como por exemplo: `setwd("C:/Users/Victor/Desktop")`.
+
+### Carregando o banco de dados
+
+Para carregar um banco de dados, podemos utilizar a função base `read.csv()`. No parênteses, deve ser escrito o nome do arquivo com o final .csv como por exemplo:
+
+```{r, warning=FALSE, message=FALSE}
+
+dados <- read.csv('pcc_cursos_uemg_atualizado.csv', sep = ";", dec = ",")
+
+```
+
+Observe que na função acima, logo após o nome do arquivo, temos os comandos `sep` e `dec`. Estes comandos servem para alterar o separador e decimais da sua tabela. Habitualmente, o csv utiliza vírgula como separador, porém este termo fica pouco funcional para utilização na linguagem PTBR, visto que a vírgula possui outras funcionalidades. Sendo assim em `sep = ";"`, nós determinamos que o separador seja igual a ";" e não a "," como é padrão do csv. Enquanto que, para `dec = ","`, definimos que o separador de decimais sejam vírgulas.
+
+### Visualizando bancos de dados
+
+Existem diversas formas de se plotar uma tabela, aqui serão passadas duas formas simples de se fazer.  
+
+* A primeira é a partir do comando `view()`, que mostra todos os dados da tabela;  
+
+* A segunda é a partir do comando `glimpse()` que permite visualizar a quantidade de observações e variáveis da tabela, separando as mesmas pelo seu tipo (int, fct, dbl).
+
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+
+glimpse(dados)
+```  
+
+### Como salvar seu banco de dados  
+
+Assim como existem diversas maneiras de carregar um banco de dados no R, a partir de pacotes por exemplo, existem diversas maneiras para salvar um banco de dados. Utilizando o Rbase, para salvar um banco de dados nós podemos utilizar a função ``write.csv()``. Como por exemplo:  
+
+```{r, warning=FALSE, message=FALSE}
+#Criando um data.frame  
+
+dados_coleta <- data.frame(
+  ordem = c("Hymenoptera", "Coleoptera", "Lepidoptera"),
+  registros = c(350, 100, 75),
+  pontos = c("Ponto 1", "Ponto 2", "Ponto 3")
+)
+# Salvando o banco de dados
+write.csv(dados_coleta, file = "dados_coleta.csv", row.names = FALSE)
+
+
+```
+
+Veja que neste exemplo, primeiro nós criamos um data frame (*dados_coleta*), a partir de uma variável, contendo strings e valores númericos, de forma que os nomes precedidos do sinal de ígual **=**, corresponderá às colunas do data frame.  
+Em seguida, utilizamos a função `write.csv()`, para salvar o data frame em um arquivo no formato csv, para isso, seguimos alguns passos:  
+
+* primeiro colocamos o nome da variável criada (*dados_coleta*);  
+
+* utilizamos o argumento `file =`, seguido do nome da variável criada separada por ponto e o formato desejado, que nesse exemplo foi o formato csv `file = dados_coleta.csv`;  
+
+* Por fim, utilizamos o argumento `row.names = FALSE`, para indicar que o arquivo não deve ser salvo com número de linhas. Este argumento é opcional e deve ser usado de acordo com suas preferências.  
+
+  
+# Como codificar Variáveis categóricas  
+
+Uma das necessidades recorrentes ao utilizar um banco de dados, é realizar a alteração de variáveis nele para que se encaixe em sue código. Portanto, é importante saber codificar suas variáveis. 
+  
+É interessante utilizar dos pacotes oferecidos por colaboradores do Software R, para a manipulação de dados, variáveis, etc. Para isso, utilizaremos o pacote ``dplyr`` como exemplo. Lembre-se que, os pacotes precisam ser instalados apenas uma vez. Visto isso utilizaremos o comando:  
+  
+```{r, warning=FALSE, message=FALSE}
+if (!require(dplyr))
+  install.packages("dplyr")
+```
+  
+O Próximo passo então, é carregar o banco de dados selecionado a partir de seu diretório, para realizar sua manipulação (Este passo foi explicado no tópico anterior).  
+  
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+
+b_dados <- read.csv ("Banco de Dados 2 Codificado.csv", sep = ";", dec =  ",")
+
+View(b_dados)
+glimpse(b_dados)
+```
+  
+Como visto antes, no código acima, buscamos o banco de dados em seu diretório, carregamos, e chamamos o comando `View` para visualiza-lo em uma nova aba no RStudio, e `glimpse` para visualiza-lo de forma mais organizada mostrando a quantidade de observações, variáveis e quais são as variáveis.  
+Observe que, carregamos o banco de dados apenas através do nome do seu arquivo, e isto se dá pois o arquivo está salvo no diretório de trabalho previamente estabelecido. Caso contrário, precisariamos chamar a função `setwd("C:/Users/Diretorio/teste/Banco de Dados 2 Codificado.csv" )`, por exemplo.  
+  
+## Como ajustar variáveis  
+Ao utilizar `glimpse` é possível ver que as variáveis são separadas por alguns padrões como *int*  e *dbl* .  
+  
+* O prefixo *int* vem de **Integer** que é uma classe e significa que esta variável é composta apenas de números inteiros;  
+
+* O prefixo *dbl* vem de **double** que é uma classe e significa que esta variável é composta de números decimais.  
+
+## Tranfosrmando variáveis  
+  
+Para alterar uma varíavel, primeiro é preciso chamar o banco de dados e em seguida separado por `$` a variável que será alterada.  
+
+* O `$` serve para puxar variáveis / colunas presentes em um banco de dados (neste caso). Exemplo: `b_dados$Genero <-`  
+Aqui, iremos transformar a variável *Genero* em um fator. Utilizaremos o comando: 
+
+```{r, message=FALSE, warning=FALSE}
+b_dados$Genero <- factor(b_dados$Genero, 
+                         label = c("M", "F"), 
+                         levels = c(0,1))
+
+glimpse(b_dados)
+```
+  
+No comando acima, observe que utilizamos a função `label = c`, aqui, criamos um rótulo para as categorais da variável, onde **M** é referente a 0 e **F** é referente a 1.  
+  
+
+* A função `label` vem da palavra rótulo e `c` é uma abreviação para concatenação.  
+
+Foi utilizado também, a função `levels` que indica quais níveis daquela variável queremos. 
+  
+Após essas alterações, será possível ver que os valores da coluna Genero, foi alterada na tabela e agora é identificado como *fct* (factor).  
+  
+Agora, transfomaremos a variável, **Grau_de_instruçao** em um fator.
+
+```{r, warning=FALSE, message=FALSE}
+b_dados$Grau_de_Instruçao <- factor(b_dados$Grau_de_Instruçao,
+                                    label = c("Fundamental", "Médio", "Superior"), levels = c(0:2), order = T)
+
+glimpse(b_dados)
+```
+Aqui, seguimos o mesmo padrão anterior, porém diferenciamos um pouco em `levels`, onde dizemos no comando que os níveis vão de 0 até 2. A parte mais importante aqui é dizer ao R que esta variável é de classe *ordinal*, portanto utilizamos o comando `order = T`, dizendo que a ordenação desta variável é igual a *TRUE* (verdadeiro).  
+  
+# Introdução a Manipulação de Dados  
+
+A manipulação de dados é essencial no processo de análise de dados e testes estatísticos. A partir da manipulação, podemos acessar pontos específicos de um data.frame, alterar dados, realizar cálculos, criar novas variáveis, dentre diversas outras opções. Aqui, faremos uma breve introdução de como realizar a manipulação de dados.  
+
+## Selecionando Linhas e Colunas  
+
+Para selecionar colunas em um data frame, podemos utilizar a operação `[, ]`, de forma que o primeiro momento irá selecionar as linhas, enquanto que no segundo momento será selecionado as colunas. Vamos utilizar um data frame já utilizado neste tutorial, para podermos manipula-lo.  
+
+
+```{r, message=FALSE, warning=FALSE}
+
+# Data frame
+dados_coleta <- data.frame(
+  ordem = c("Hymenoptera", "Coleoptera", "Lepdoptera"),
+  registros = c(350, 100, 75),
+  pontos = c("Ponto 1", "Ponto 2", "Ponto 3")
+)
+
+# Selecionando a coluna "ordem"
+
+coluna_ordem <- dados_coleta[, "ordem"]
+coluna_ordem
+
+# Selecionando as colunas "ordem" e "registros"
+
+coluna_ordem_registro <- dados_coleta[, c("ordem", "registros")]
+coluna_ordem_registro
+
+# Selecionando a segunda linha do data frame
+
+linha_2 <- dados_coleta[2, ]
+linha_2
+```
+## Filtrando dados  
+Uma das funções muito utilizadas durante uma manipulação de dados, é a função de filtragem, que te permite selecionar dados a partir de condições criadas por você. Por exemplo, imagine que você quer identificar dentro do data frame **dados_coleta** apenas os registros que somam valores maiores ou igual a 100, ou por exemplo, que você queira selecionar apenas os dados que se referem a ordem **Hymenoptera**.  
+Tudo isso é possível ser realizado a partir de combinações de operadores lógicos como `>=`, `==`, dentre outras possibilidades (`<`, `>`, `!=`, `&`, etc). Para isso, para realizar a filtragem de dados, podemos utilizar a função `subset()`.  
+
+Vamos exemplificar, utilizando o data frame **dados_coleta**:  
+
+```{r, message=FALSE, warning=FALSE}
+
+#Filtrando dados a partir do número de registros maiores ou iguais a 100 (<=)
+
+registros_filtro <- subset(dados_coleta, registros >= 100)
+registros_filtro
+
+#Filtrando dados que sejam referentes apenas a ordem Hymenoptera  (==)
+
+ordem_filtro <- subset(dados_coleta, ordem == "Hymenoptera")
+ordem_filtro
+
+```
+
+Veja que nestes exemplos utilizamos a função `subset()`, juntamente dos operadores lógicos **>=** e **==**, para identificar registros que sejam maiores ou iguais a 100 e os dados que correspondem a ordem Hymenoptera.  
+
+## Ordenando Dados  
+
+Dentro da manipulação de dados, podemos também ordenar dados de acordo com nossas preferências, utilizando a função base `order()`.  
+  
+Vamos exemplificar, utilizando o data frame **dados_coleta**:  
+
+```{r, message=FALSE, warning=FALSE}
+#Ordenando os dados por registros em ordem crescente  
+
+registros_ordem <- dados_coleta[order(dados_coleta$registros)]
+registros_ordem
+
+#Ordenando os dados por registros em ordem decrescente  
+
+registros_decrescente <- dados_coleta[order(-dados_coleta$registros)]
+registros_decrescente
+
+```
+
+Neste exemplo, nós utilizamos a função `order()` para ordenar os dados, juntamente do operador **$** para selecionar qual coluna queriamos ordenar em forma crescente e da mesma maneira, para ordenar de forma decrescente adicionamos o sinal de subtração **-** precedindo o data frame.  
+
+## Criando Variáveis  
+É possível também, criar novas variáveis/colunas para compor um data frame, de acordo com suas preferências.  
+  
+Vamos exemplificar, utilizando o data frame **dados_coleta**:  
+```{r, message=FALSE, warning=FALSE}
+#Adicionando uma nova variável "relevancia_amostragem"  
+
+dados_coleta$relevancia_amostragem <- dados_coleta$registros >= 100
+dados_coleta
+
+```
+
+Veja que, neste exemplo, queriamos criar uma variável que nos mostrasse que a quantidade de amostragem era relevante, considerando que a relevância deveria ser maior ou igual a 100. Para isso, criamos um vetor separado por **$** que indique o nome da nossa nova coluna. Em seguida, acessamos o data frame e a quantidade de registros, indicando que queriamos que a coluna **relevancia_amostragem** deveria respeitar a exigência de que os valores de amostragem deveriam conter uma quantidade maior ou igual a 100 ( >= 100).  
+
+# Referências 
+
+* R Core Team (2022). R: A language and environment for statistical computing. R
+  Foundation for Statistical Computing, Vienna, Austria. URL <https://www.R-project.org/>.  
+  
+* Wickham H, François R, Henry L, Müller K, Vaughan D (2023). _dplyr: A Grammar of Data
+  Manipulation_. R package version 1.1.3, <https://CRAN.R-project.org/package=dplyr>.
+
+
+</div>
